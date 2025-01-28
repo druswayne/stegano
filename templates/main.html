@@ -73,20 +73,29 @@
                 padding: 8px;
             }
         }
+        .error {background-color: red; color:black; text-align: center; padding:5px; font-weight: 700;}
+        .ok {background-color: green; color:white; text-align: center; padding:5px; font-weight: 700;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Шифрование</h2>
-        <form action="/encrypt" method="post" enctype="multipart/form-data">
-            <label for="file">Выберите изображение:</label>
-            <input type="file" id="file" name="file" accept="image/*" required>
-            <label for="text">Введите текст для шифрования:</label>
-            <textarea id="text" name="text" required></textarea>
-            <button type="submit">Зашифровать</button>
-        </form>
-        <button class="back-button" onclick="window.location.href='/deshifr/'">Расшифровать</button>
-    </div>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Шифрование</h2>
+    <form action="/encrypt" method="post" enctype="multipart/form-data">
+        <label for="file">Выберите изображение:</label>
+        <input type="file" id="file" name="file" accept="image/*" required>
+        <label for="text">Введите текст для шифрования:</label>
+        <textarea id="text" name="text" required></textarea>
+        <button type="submit">Зашифровать</button>
+    </form>
+    <button class="back-button" onclick="window.location.href='/deshifr/'">Расшифровать</button>
+</div>
 </body>
 </html>
 

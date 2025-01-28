@@ -71,27 +71,30 @@
                 padding: 8px;
             }
         }
+        .error {background-color: red; color:black; text-align: center; padding:5px; font-weight: 700;}
+        .ok {background-color: green; color:white; text-align: center; padding:5px; font-weight: 700;}
     </style>
 </head>
 <body>
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<p class="{{ category }}">{{ message }}</p>
-{% endfor %}
-{% endif %}
-{% endwith %}
-    <div class="container">
-        <h2>Форма входа</h2>
-        <form action="/auto/" method="post">
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="login" required>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Войти</button>
-        </form>
-        <button class="register-button" onclick="window.location.href='/reg'">Регистрация</button>
-    </div>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Форма входа</h2>
+    <form action="/auto/" method="post">
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="login" required>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Войти</button>
+    </form>
+    <button class="register-button" onclick="window.location.href='/reg'">Регистрация</button>
+</div>
 </body>
 </html>
 

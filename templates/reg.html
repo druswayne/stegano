@@ -62,10 +62,7 @@
         .login-button:hover {
             background-color: #0b7dda;
         }
-        .error {
-            color: red;
-            text-align: center;
-        }
+
  @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -75,22 +72,30 @@
                 padding: 8px;
             }
         }
+        .error {background-color: red; color:black; text-align: center; padding:5px; font-weight: 700;}
+        .ok {background-color: green; color:white; text-align: center; padding:5px; font-weight: 700;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Регистрация</h2>
-        <form action="/save_data/" method="post">
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="login" required>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-            <label for="confirm_password">Подтвердите пароль:</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <div class="error" id="error-message"></div>
-            <input type="submit" value="Зарегистрироваться">
-        </form>
-        <button class="login-button" onclick="window.location.href='/'">У меня уже есть аккаунт</button>
-    </div>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Регистрация</h2>
+    <form action="/save_data/" method="post">
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="login" required>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="confirm_password">Подтвердите пароль:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+    <button class="login-button" onclick="window.location.href='/'">У меня уже есть аккаунт</button>
+</div>
 </body>
 </html>
