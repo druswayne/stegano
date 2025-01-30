@@ -1,24 +1,21 @@
-from flask import Flask, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash, session
 from cachelib import FileSystemCache
 from flask_session import Session
 from datetime import timedelta
 import sqlite3
 
+con = sqlite3.connect('data.db', check_same_thread=False)
+cursor = con.cursor()
 app = Flask(__name__)
 app.secret_key = '1234'
 app.config['SESSION_TYPE'] = 'cacheLib'
 app.config['SESSION_CACHELIB'] = FileSystemCache(cache_dir='Flask_session', threshold=500)
 Session(app)
 
-session['login'] = True
-session['username'] = login
-session.permanent = False
-
 @app.route("/logout/")
 def logout():
-    session.clear()
     flash(message='Вы вышли из профиля', category='danger')
-    return redirect(url_for('auto_page'))
+    return redirect(url_for('login_page'))
 
 @app.route('/login/')
 def login_page():
@@ -66,6 +63,9 @@ def auto_page():
     cursor.execute('select * from users where login=(?) and password=(?)',(login, password))
     data = cursor.fetchall()
     if data:
+        session['login'] = True
+        session['username'] = login
+        session.modified = True
         flash('Вы успешно вошли в профиль!', 'ok')
         return redirect(url_for("main_page"))
     flash('неверный логин или пароль', 'error')
