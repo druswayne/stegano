@@ -18,21 +18,28 @@ Session(app)
 @app.route("/logout/")
 def logout():
     flash(message='Вы вышли из профиля', category='danger')
+    session.clear()
     return redirect(url_for('login_page'))
 
 @app.route('/login/')
 def login_page():
+    if'login' in session:
+        flash('Вы уже вошли в профиль', 'error')
+        return redirect(url_for('main_page'))
     return render_template('login.html')
 
 @app.route('/')
 def main_page():
     if 'login' not in session:
-        flash('Необходимо авторизоваться', 'danger')
+        flash('Необходимо авторизоваться', 'error')
         return redirect(url_for('login_page'))
     return render_template('main.html')
 
 @app.route('/deshifr/')
 def deshifr_page():
+    if 'login' not in session:
+        flash('Необходимо авторизоваться', 'danger')
+        return redirect(url_for('login_page'))
     return render_template('deshifr.html')
 
 @app.route('/reg/')
@@ -48,7 +55,9 @@ def save_data():
         flash('Пароли не совпадают!', 'error')
         return redirect(url_for('reg_page'))
     cursor.execute('select * from users where login = (?)', (login,))
+
     data = cursor.fetchall()
+    print(data)
     if data:
         flash('Пользователь с таким именем уже существует', 'error')
         return redirect(url_for('reg_page'))
@@ -68,6 +77,7 @@ def auto_page():
     if data:
         session['login'] = True
         session['username'] = login
+        session.permanent = False
         session.modified = True
         flash('Вы успешно вошли в профиль!', 'ok')
         return redirect(url_for("main_page"))
