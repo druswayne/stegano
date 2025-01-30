@@ -1,9 +1,24 @@
 from flask import Flask, render_template, request, url_for, redirect, flash
+from cachelib import FileSystemCache
+from flask_session import Session
+from datetime import timedelta
 import sqlite3
+
 app = Flask(__name__)
 app.secret_key = '1234'
-con = sqlite3.connect('data.db', check_same_thread=False)
-cursor = con.cursor()
+app.config['SESSION_TYPE'] = 'cacheLib'
+app.config['SESSION_CACHELIB'] = FileSystemCache(cache_dir='Flask_session', threshold=500)
+Session(app)
+
+session['login'] = True
+session['username'] = login
+session.permanent = False
+
+@app.route("/logout/")
+def logout():
+    session.clear()
+    flash(message='Вы вышли из профиля', category='danger')
+    return redirect(url_for('auto_page'))
 
 @app.route('/login/')
 def login_page():
@@ -11,6 +26,9 @@ def login_page():
 
 @app.route('/')
 def main_page():
+    if 'login' not in session:
+        flash('Необходимо авторизоваться', 'danger')
+        return redirect(url_for('login_page'))
     return render_template('main.html')
 
 @app.route('/deshifr/')
@@ -27,12 +45,12 @@ def save_data():
     password = request.form['password']
     confirm_password = request.form['confirm_password']
     if password != confirm_password:
-        flash('Пароли не совпадаю!', 'error')
+        flash('Пароли не совпадают!', 'error')
         return redirect(url_for('reg_page'))
     cursor.execute('select * from users where login = (?)', (login,))
     data = cursor.fetchall()
     if data:
-        flash('Пользователь с таким именем существует', 'error')
+        flash('Пользователь с таким именем уже существует', 'error')
         return redirect(url_for('reg_page'))
     cursor.execute('insert into users (login, password) values (?,?)', (login, password))
     con.commit()
