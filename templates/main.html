@@ -14,6 +14,28 @@
             height: 100vh;
             margin: 0;
         }
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .header label {
+            margin-right: 10px;
+            color: #333;
+        }
+        .header button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .header button:hover {
+            background-color: #d32f2f;
+        }
         .container {
             background-color: #fff;
             padding: 20px;
@@ -42,6 +64,9 @@
             border-radius: 5px;
             width: 100%;
             box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
         }
         button {
             margin-top: 20px;
@@ -78,6 +103,10 @@
     </style>
 </head>
 <body>
+<div class="header">
+    <label id="user-login">{{login}}</label>
+    <button id="logout-button" onclick="window.location.href='/logout/'">Выйти</button>
+</div>
 <div class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -97,6 +126,8 @@
     <button class="back-button" onclick="window.location.href='/deshifr/'">Расшифровать</button>
 </div>
 </body>
+</html>
+
 </html>
 
 

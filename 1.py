@@ -33,14 +33,14 @@ def main_page():
     if 'login' not in session:
         flash('Необходимо авторизоваться', 'error')
         return redirect(url_for('login_page'))
-    return render_template('main.html')
+    return render_template('main.html', login = session['username'])
 
 @app.route('/deshifr/')
 def deshifr_page():
     if 'login' not in session:
         flash('Необходимо авторизоваться', 'danger')
         return redirect(url_for('login_page'))
-    return render_template('deshifr.html')
+    return render_template('deshifr.html', login = session['username'])
 
 @app.route('/reg/')
 def reg_page():

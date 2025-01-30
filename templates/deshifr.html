@@ -14,6 +14,28 @@
             height: 100vh;
             margin: 0;
         }
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .header label {
+            margin-right: 10px;
+            color: #333;
+        }
+        .header button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .header button:hover {
+            background-color: #d32f2f;
+        }
         .container {
             background-color: #fff;
             padding: 20px;
@@ -35,7 +57,7 @@
             margin-top: 10px;
             color: #555;
         }
-        input[type="file"] {
+        input[type="file"], textarea {
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -43,14 +65,8 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .output-container {
-            padding: 10px;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        textarea {
             height: 100px;
-            overflow-y: auto;
-            background-color: #f9f9f9;
         }
         button {
             margin-top: 20px;
@@ -82,19 +98,38 @@
                 padding: 8px;
             }
         }
+        .error {background-color: red; color:black; text-align: center; padding:5px; font-weight: 700;}
+        .ok {background-color: green; color:white; text-align: center; padding:5px; font-weight: 700;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Расшифровка</h2>
-        <form action="/decrypt" method="post" enctype="multipart/form-data">
-            <label for="file">Выберите изображение:</label>
-            <input type="file" id="file" name="file" accept="image/*" required>
-            <div class="output-container" id="output-text">алураушда</div>
-            <button type="submit">Расшифровать</button>
-        </form>
-        <button class="back-button" onclick="window.location.href='/'">Вернуться на главную</button>
-    </div>
-    
+<div class="header">
+    <label id="user-login">{{login}}</label>
+    <button id="logout-button" onclick="window.location.href='/logout/'">Выйти</button>
+</div>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <p class="{{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Расшифровка</h2>
+    <form action="/decrypt" method="post" enctype="multipart/form-data">
+        <label for="file">Выберите изображение:</label>
+        <input type="file" id="file" name="file" accept="image/*" required>
+        <label for="text">Введите зашифрованный текст:</label>
+        <textarea id="text" name="text" required></textarea>
+        <button type="submit">Расшифровать</button>
+    </form>
+    <button class="back-button" onclick="window.location.href='/'">Зашифровать</button>
+</div>
 </body>
 </html>
+
+
+
+
+
+
