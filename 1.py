@@ -6,6 +6,9 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key = '1234'
+con = sqlite3.connect('data.db', check_same_thread=False)
+cursor = con.cursor()
+
 app.config['SESSION_TYPE'] = 'cacheLib'
 app.config['SESSION_CACHELIB'] = FileSystemCache(cache_dir='Flask_session', threshold=500)
 Session(app)
