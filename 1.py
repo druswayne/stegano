@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, session
 from cachelib import FileSystemCache
 from flask_session import Session
-from datetime import timedelta
+#from datetime import timedelta
+#from steganocryptopy.steganography import Steganography
 import sqlite3
+
+from steganocryptopy.steganography import Steganography
 
 con = sqlite3.connect('data.db', check_same_thread=False)
 cursor = con.cursor()
@@ -63,6 +66,13 @@ def save_data():
         return redirect(url_for('reg_page'))
     cursor.execute('insert into users (login, password) values (?,?)', (login, password))
     con.commit()
+    cursor.execute('select id from users where login = (?)', (login,))
+    id_user = cursor.fetchone()[0]
+    Steganography.generate_key(f'keys/key_{id_user}.txt')
+    with open(f'keys/key_{id_user}.txt', 'r', encoding='utf-8') as file:
+        key_user = file.read()
+    cursor.execute('update users set key = (?) where id = (?)', (key_user, id_user))
+    con.commit()
     flash('Регистрация успешно завершена!', 'ok')
     return redirect(url_for('login_page'))
 
@@ -79,6 +89,9 @@ def auto_page():
         session['username'] = login
         session.permanent = False
         session.modified = True
+        cursor.execute('select id from users where login = (?)', (login,))
+        id_user= cursor.fetchone()[0]
+        session['id_user'] = id_user
         flash('Вы успешно вошли в профиль!', 'ok')
         return redirect(url_for("main_page"))
     flash('неверный логин или пароль', 'error')
