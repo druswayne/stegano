@@ -121,9 +121,9 @@
         <input type="file" id="file" name="file" accept="image/*" required>
         <label for="text">Зашифрованный текст:</label>
         <textarea id="text" name="text">{{text}}</textarea>
-        <button type="submit">Расшифровать</button>
+        <button type="submit" onclick="window.location.href='/encrypt/'">Расшифровать</button>
     </form>
-    <button class="back-button" onclick="window.location.href='/decrypt/'">Зашифровать</button>
+    <button class="back-button" onclick="window.location.href='/'">Зашифровать</button>
 </div>
 </body>
 </html>
