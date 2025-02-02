@@ -20,7 +20,7 @@
             left: 90%;
             display: flex;
             align-items: center;
-
+        }
         .header label {
             margin-right: 10px;
             color: #333;
@@ -116,7 +116,7 @@
     {% endif %}
     {% endwith %}
     <h2>Расшифровка</h2>
-    <form action="/decrypt" method="post" enctype="multipart/form-data">
+    <form action="/decrypt/" method="post" enctype="multipart/form-data">
         <label for="file">Выберите изображение:</label>
         <input type="file" id="file" name="file" accept="image/*" required>
         <label for="text">Зашифрованный текст:</label>

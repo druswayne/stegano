@@ -39,7 +39,7 @@ def main_page():
         return redirect(url_for('login_page'))
     return render_template('main.html', login = session['username'])
 
-@app.route('/encrypt/')
+@app.route('/encrypt/', methods=["post"])
 def encrypt():
     text_message = request.form['text']
     with open(f'text_message/text_{session["id_user"]}.txt', 'w', encoding='utf-8') as file:
@@ -56,13 +56,14 @@ def encrypt():
     return send_file(f'output_image/image_{["id_user"]}.png', mimetype='image/*')
 
 
-@app.route('/decrypt/')
+@app.route('/decrypt/', methods=["post"])
 def decrypt():
     image = request.files.get('file')
     image.save(f'shifr_image/image_{session["id_user"]}.png')
     result = Steganography.decrypt(f'keys/key_{session["id_user"]}.txt',
                                    f'shifr_image/image_{session["id_user"]}.png')
     return render_template('deshifr.html', text= result)
+
 @app.route('/deshifr/')
 def deshifr_page():
     if 'login' not in session:
