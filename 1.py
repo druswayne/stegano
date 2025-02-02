@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, url_for, redirect, flash, session, send_file
 from cachelib import FileSystemCache
 from flask_session import Session
+from PIL import Image
+from steganocryptopy.steganography import Steganography
 #from datetime import timedelta
-#from steganocryptopy.steganography import Steganography
 import sqlite3
 
-from steganocryptopy.steganography import Steganography
+
 
 con = sqlite3.connect('data.db', check_same_thread=False)
 cursor = con.cursor()
@@ -38,6 +39,30 @@ def main_page():
         return redirect(url_for('login_page'))
     return render_template('main.html', login = session['username'])
 
+@app.route('/encrypt/')
+def encrypt():
+    text_message = request.form['text']
+    with open(f'text_message/text_{session["id_user"]}.txt', 'w', encoding='utf-8') as file:
+        file.write(text_message)
+    image = request.files.get('file')
+    image.save(f'input_image/image_{session["id_user"]}.png')
+    image_old = Image.open(f'input_image/image_{session["id_user"]}.png')
+    rgb_image= image_old.convert('RGB')
+    rgb_image.save(f'temp_image/image_{session["id_user"]}.png', format='PNG')
+    secret = Steganography.encrypt(f'keys/key_{session["id_user"]}.txt',
+                                   f'temp_image/image_{session["id_user"]}.png',
+                                   f'text_message/text_{session["id_user"]}.txt')
+    secret.save(f'output_image/image_{["id_user"]}.png')
+    return send_file(f'output_image/image_{["id_user"]}.png', mimetype='image/*')
+
+
+@app.route('/decrypt/')
+def decrypt():
+    image = request.files.get('file')
+    image.save(f'shifr_image/image_{session["id_user"]}.png')
+    result = Steganography.decrypt(f'keys/key_{session["id_user"]}.txt',
+                                   f'shifr_image/image_{session["id_user"]}.png')
+    return render_template('deshifr.html', text= result)
 @app.route('/deshifr/')
 def deshifr_page():
     if 'login' not in session:
@@ -58,7 +83,6 @@ def save_data():
         flash('Пароли не совпадают!', 'error')
         return redirect(url_for('reg_page'))
     cursor.execute('select * from users where login = (?)', (login,))
-
     data = cursor.fetchall()
     print(data)
     if data:

@@ -119,11 +119,11 @@
     <form action="/decrypt" method="post" enctype="multipart/form-data">
         <label for="file">Выберите изображение:</label>
         <input type="file" id="file" name="file" accept="image/*" required>
-        <label for="text">Введите зашифрованный текст:</label>
-        <textarea id="text" name="text" required></textarea>
+        <label for="text">Зашифрованный текст:</label>
+        <textarea id="text" name="text">{{text}}</textarea>
         <button type="submit">Расшифровать</button>
     </form>
-    <button class="back-button" onclick="window.location.href='/'">Зашифровать</button>
+    <button class="back-button" onclick="window.location.href='/decrypt/'">Зашифровать</button>
 </div>
 </body>
 </html>
