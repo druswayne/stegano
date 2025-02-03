@@ -52,8 +52,8 @@ def encrypt():
     secret = Steganography.encrypt(f'keys/key_{session["id_user"]}.txt',
                                    f'temp_image/image_{session["id_user"]}.png',
                                    f'text_message/text_{session["id_user"]}.txt')
-    secret.save(f'output_image/image_{["id_user"]}.png')
-    return send_file(f'output_image/image_{["id_user"]}.png', mimetype='image/*')
+    secret.save(f'output_image/image_{session["id_user"]}.png')
+    return send_file(f'output_image/image_{session["id_user"]}.png', mimetype='image/*')
 
 
 @app.route('/decrypt/', methods=["post"])
@@ -62,7 +62,7 @@ def decrypt():
     image.save(f'shifr_image/image_{session["id_user"]}.png')
     result = Steganography.decrypt(f'keys/key_{session["id_user"]}.txt',
                                    f'shifr_image/image_{session["id_user"]}.png')
-    return render_template('deshifr.html', text= result)
+    return render_template('deshifr.html', text= result,login = session['username'])
 
 @app.route('/deshifr/')
 def deshifr_page():
