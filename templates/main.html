@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шифрование</title>
+    <title>SilentPix – Шифрование</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,6 +104,7 @@
         }
         .error {background-color: red; color:black; text-align: center; padding:5px; font-weight: 700;}
         .ok {background-color: green; color:white; text-align: center; padding:5px; font-weight: 700;}
+        .named {}
     </style>
 </head>
 <body>
@@ -112,6 +113,7 @@
     <button id="logout-button" onclick="window.location.href='/logout/'">Выйти</button>
 </div>
 <div class="container">
+
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -119,6 +121,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+    <div id="named" style="font-size: 200%; text-align:center;font-weight: 1000; text-shadow: black 0 -0.5px;font-family: Tahoma, Geneva, sans-serif; ">SilentPix</div>
     <h2>Шифрование</h2>
     <form action="/encrypt/" method="post" enctype="multipart/form-data">
         <label for="file">Выберите изображение:</label>

@@ -41,28 +41,37 @@ def main_page():
 
 @app.route('/encrypt/', methods=["post"])
 def encrypt():
-    text_message = request.form['text']
-    with open(f'text_message/text_{session["id_user"]}.txt', 'w', encoding='utf-8') as file:
-        file.write(text_message)
-    image = request.files.get('file')
-    image.save(f'input_image/image_{session["id_user"]}.png')
-    image_old = Image.open(f'input_image/image_{session["id_user"]}.png')
-    rgb_image= image_old.convert('RGB')
-    rgb_image.save(f'temp_image/image_{session["id_user"]}.png', format='PNG')
-    secret = Steganography.encrypt(f'keys/key_{session["id_user"]}.txt',
-                                   f'temp_image/image_{session["id_user"]}.png',
-                                   f'text_message/text_{session["id_user"]}.txt')
-    secret.save(f'output_image/image_{session["id_user"]}.png')
-    return send_file(f'output_image/image_{session["id_user"]}.png', mimetype='image/*')
+    try:
+        text_message = request.form['text']
+        with open(f'text_message/text_{session["id_user"]}.txt', 'w', encoding='utf-8') as file:
+            file.write(text_message)
+        image = request.files.get('file')
+        image.save(f'input_image/image_{session["id_user"]}.png')
+        image_old = Image.open(f'input_image/image_{session["id_user"]}.png')
+        rgb_image = image_old.convert('RGB')
+        rgb_image.save(f'temp_image/image_{session["id_user"]}.png', format='PNG')
+        secret = Steganography.encrypt(f'keys/key_{session["id_user"]}.txt',
+                                       f'temp_image/image_{session["id_user"]}.png',
+                                       f'text_message/text_{session["id_user"]}.txt')
+        secret.save(f'output_image/image_{session["id_user"]}.png')
+        return send_file(f'output_image/image_{session["id_user"]}.png', mimetype='image/*')
+    except:
+        flash('Произошла ошибка, попробуйте ещё раз', 'error')
+        return redirect(url_for('main_page'))
+
 
 
 @app.route('/decrypt/', methods=["post"])
 def decrypt():
-    image = request.files.get('file')
-    image.save(f'shifr_image/image_{session["id_user"]}.png')
-    result = Steganography.decrypt(f'keys/key_{session["id_user"]}.txt',
-                                   f'shifr_image/image_{session["id_user"]}.png')
-    return render_template('deshifr.html', text= result,login = session['username'])
+    try:
+        image = request.files.get('file')
+        image.save(f'shifr_image/image_{session["id_user"]}.png')
+        result = Steganography.decrypt(f'keys/key_{session["id_user"]}.txt',
+                                       f'shifr_image/image_{session["id_user"]}.png')
+        return render_template('deshifr.html', text= result,login = session['username'])
+    except:
+        flash('Произошла ошибка, попробуйте ещё раз', 'error')
+        return redirect(url_for('deshifr_page'))
 
 @app.route('/deshifr/')
 def deshifr_page():
